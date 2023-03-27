@@ -1,0 +1,57 @@
+Design Document for JS Wrapper of OarmSimulator
+
+Introduction:
+The OarmSimulator is a Java-based simulation software used in radiation therapy treatment planning. This software has several features and functionalities that allow for the creation and simulation of different treatment plans. The goal of this project is to create a JavaScript wrapper for the OarmSimulator, which would make it easier for developers to use the software in their projects.
+
+Design:
+
+The following steps can be taken to design the JS wrapper for the OarmSimulator:
+
+Step 1: Create a class called OarmSimulator
+The OarmSimulator class would have several properties, including the jarPath, processId, connected, logWatcher, masterConfigPath, stealthAppIp, and sendImage.
+
+Step 2: Add a constructor to the OarmSimulator class
+The constructor would take the following parameters: jarPath, masterConfigPath, stealthAppIp, and sendImage. These parameters would be used to initialize the properties of the OarmSimulator class.
+
+Step 3: Add a connect method to the OarmSimulator class
+The connect method would attempt to connect to the slave three times. If it fails to connect after three attempts, it would throw an exception. If it succeeds, it would set the connected property to true and log a message indicating that it has connected to the slave.
+
+Step 4: Add a disconnect method to the OarmSimulator class
+The disconnect method would disconnect from the slave and set the connected property to false.
+
+Step 5: Add a getProcessId method to the OarmSimulator class
+The getProcessId method would return the process ID of the Oarm simulator.
+
+Step 6: Add a loadExamXmlFile method to the OarmSimulator class
+The loadExamXmlFile method would take a path to an exam XML file and load the exam information from it.
+
+Step 7: Add a getStatus method to the OarmSimulator class
+The getStatus method would return the status of the Oarm simulator (connected or not connected).
+
+Step 8: Add an npmLogWatcher method to the OarmSimulator class
+The npmLogWatcher method would create a child process to watch the Oarm simulator log file and log the output to the console. It would also log a message indicating that the log watcher has been started.
+
+Step 9: Add a createMasterConfigXmlFile method to the OarmSimulator class
+The createMasterConfigXmlFile method would create a masterConfig.xml file from a template and the provided StealthApp IP address.
+
+Step 10: Add a createExamXmlFile method to the OarmSimulator class
+The createExamXmlFile method would create an examConfig.xml file from a template if the sendImage property is true.
+
+Step 11: Export the OarmSimulator class from the module
+The OarmSimulator class would be exported from the module to be used in other projects.
+
+Step 12: Include the Oarm simulator JAR file and its dependencies in the NPM package
+The Oarm simulator JAR file and its dependencies would be included in the NPM package to make it easier for developers to use the software.
+
+Step 13: Add a check for JDK installation in the package installation script
+The package installation script would include a check for JDK installation to ensure that the software runs smoothly.
+
+Step 14: Add ESLint and Prettier configurations to the package
+ESLint and Prettier configurations would be added to the package to ensure that the code is consistent and follows best practices.
+
+Step 15: Document the usage of the package in the README file
+The usage of the package would be documented in the README file to make it easier for developers to use the software.
+
+Conclusion:
+
+we have outlined the steps to design a JavaScript wrapper for the OarmSimulator, including creating a class with various properties and methods to interact with the Oarm simulator, adding functionality to connect and disconnect from the slave, load exam information, and log output to the console. Additionally, we discussed including the Oarm simulator JAR file and its dependencies in the NPM package, adding checks for JDK installation, and including ESLint and Prettier configurations to ensure code quality. Finally, we mentioned the importance of documenting the usage of the package in the README file.

@@ -1,0 +1,85 @@
+ here's an example TypeScript method that watches a log file, gets the last line that was added, and writes it to a new file. It also includes a method to reset the log file:
+
+typescript
+Copy code
+import { createReadStream, createWriteStream } from "fs";
+import { Tail } from "tail";
+
+class LogWatcher {
+  private readonly logPath: string;
+  private readonly outputFilePath: string;
+  private tail: Tail;
+
+  constructor(logPath: string, outputFilePath: string) {
+    this.logPath = logPath;
+    this.outputFilePath = outputFilePath;
+    this.tail = new Tail(logPath, { follow: true });
+  }
+
+  watchAndWriteLastLine(): void {
+    let lastLine = "";
+    this.tail.on("line", (line) => {
+      lastLine = line;
+    });
+
+    setInterval(() => {
+      if (lastLine) {
+        createWriteStream(this.outputFilePath, { flags: "w" }).write(lastLine);
+      }
+    }, 1000);
+  }
+
+  resetLogFile(): void {
+    createWriteStream(this.logPath, { flags: "w" }).end();
+  }
+}
+To use this class, create a new instance of it with the path to your log file and the desired output file path:
+
+typescript
+Copy code
+const watcher = new LogWatcher("/path/to/logfile.log", "/path/to/outputfile.txt");
+Then, call the watchAndWriteLastLine method to start watching the log file and writing the last line to the output file:
+
+typescript
+Copy code
+watcher.watchAndWriteLastLine();
+This method sets up a Tail instance to watch the log file, and listens for the line event to capture the last line that was added. It then writes that line to the output file every second using createWriteStream.
+
+To reset the log file, call the resetLogFile method:
+
+typescript
+Copy code
+watcher.resetLogFile();
+This method creates a new write stream to the log file with the w flag to overwrite the existing file, effectively resetting it to an empty file.
+
+Note that this implementation assumes that the log file is a text file with each line terminated by a newline character (\n). If your log file uses a different line ending, or is not a text file, you may need to use a different approach to read the last line.
+
+
+
+
+NPM command that watches a log file and prints the last line that was added:
+
+First, install the tail package which provides a simple command-line utility for outputting the last part of files:
+
+bash
+Copy code
+npm install --save tail
+Then, add the following command to the scripts section of your package.json file:
+
+json
+Copy code
+"scripts": {
+  "watch-log": "tail -f /path/to/logfile | awk '{last=$0} END {print last}'"
+}
+Replace /path/to/logfile with the path to your log file.
+
+This command uses the tail utility to output the last few lines of the log file (-f option is used to follow the file as it grows), and awk to print the last line from those lines.
+
+To run the command, open a terminal window and navigate to your project directory, then run:
+
+arduino
+Copy code
+npm run watch-log
+This will start watching the log file and print the last line that was added. The command will continue running until you interrupt it by pressing Ctrl+C.
+
+Note that the above command assumes that the log file is a text file with each line terminated by a newline character (\n). If your log file uses a different line ending, or is not a text file, you may need to use a different approach to read the last line.

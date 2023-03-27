@@ -1,0 +1,42 @@
+{
+  "name": "restfultestify",
+  "version": "1.0.0",
+  "description": "RestfulTestify is an API testing framework designed to test REST APIs and WebSocket connections using Typescript, Jest, and supertest.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kerrfat/RestfulTestify.git"
+  },
+  "author": "Fateh Kerrache",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kerrfat/RestfulTestify/issues"
+  },
+  "homepage": "https://github.com/kerrfat/RestfulTestify#readme",
+  "dependencies": {
+    "@types/express": "^4.17.17",
+    "@types/ws": "^8.5.4",
+    "express": "^4.18.2",
+    "jest": "^29.5.0",
+    "jest-html-reporters": "^3.1.4",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.0.2",
+    "ws": "^8.13.0",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "eslint-config-import": "^0.13.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.4"
+  }
+}
