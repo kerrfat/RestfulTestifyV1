@@ -162,4 +162,20 @@ function checkJdkInstallation(): void {
     console.log('JDK or OpenJDK is not installed.');
   }
 }
+
+import { execSync } from 'child_process';
+
+/**
+ * Checks if JDK or OpenJDK is installed.
+ * @returns {boolean} True if JDK or OpenJDK is installed, false otherwise.
+ */
+function isJdkInstalled(): boolean {
+  try {
+    // Execute the `java -version` command and check the output for the presence of the JDK or OpenJDK version.
+    const output = execSync('java -version 2>&1', { encoding: 'utf8' });
+    return output.includes('JDK') || output.includes('OpenJDK');
+  } catch (err) {
+    return false;
+  }
+}
   
