@@ -147,4 +147,19 @@ async loadExamXmlFile(examXmlPath) {
   }
   
   module.exports = OarmSimulator;
+
+import { execSync } from 'child_process';
+
+function checkJdkInstallation(): void {
+  try {
+    const output = execSync('java -version').toString('utf8');
+    if (output.includes('java version') || output.includes('openjdk version')) {
+      console.log('JDK or OpenJDK is installed.');
+    } else {
+      console.log('JDK or OpenJDK is not installed.');
+    }
+  } catch (error) {
+    console.log('JDK or OpenJDK is not installed.');
+  }
+}
   
