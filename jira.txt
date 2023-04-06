@@ -1,0 +1,20 @@
+Title: Using Wrong patientOid in GET Method for /patients Endpoint Kills Application
+
+Description:
+When attempting to update a patient using the GET method for the /patients endpoint, using an incorrect patientOid value causes the entire application to crash. This issue has been replicated consistently and poses a serious problem for our users.
+
+Steps to Reproduce:
+
+Make a GET request to the /patients endpoint with an incorrect patientOid value
+Observe that the application crashes
+Expected Result:
+The application should return a response indicating that the patientOid value is incorrect or not found, without crashing the entire application.
+
+Actual Result:
+The entire application crashes, making it unusable until restarted.
+
+Impact:
+This issue has a severe impact on our users, as it renders the application unusable until restarted. We recommend prioritizing this issue for immediate attention.
+
+Attachments:
+If applicable, you may attach any relevant screenshots or logs that could help with reproducing or debugging the issue.
