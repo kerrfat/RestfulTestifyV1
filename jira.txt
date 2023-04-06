@@ -19,14 +19,32 @@ This issue has a severe impact on our users, as it renders the application unusa
 Attachments:
 If applicable, you may attach any relevant screenshots or logs that could help with reproducing or debugging the issue.
 
-When a GET request is made to the /patients endpoint with an incorrect patientOid, the application should return an error message indicating that the patientOid is incorrect and the patient should not be updated.
-The error message should clearly state that the patientOid provided in the request is invalid and provide suggestions for correcting it.
-The application should not crash or become unusable when an invalid patientOid is used in the GET request.
-The defect fix should be tested across multiple configurations and environments to ensure it does not introduce any new issues or regressions.
-Automated tests should be created to validate that the fix works as expected and that the defect does not reappear in the future.
+
+Acceptance Criteria:
 
 When a GET request is made to the /patients endpoint with an incorrect patientOid, the application should return an error message indicating that the patientOid is incorrect and the patient should not be updated.
 The error message should clearly state that the patientOid provided in the request is invalid and provide suggestions for correcting it.
 The application should not crash or become unusable when an invalid patientOid is used in the GET request.
 The defect fix should be tested across multiple configurations and environments to ensure it does not introduce any new issues or regressions.
 Automated tests should be created to validate that the fix works as expected and that the defect does not reappear in the future.
+Please note that the acceptance criteria will vary depending on the specifics of the issue and your organization's requirements. It's important to work with your team and stakeholders to define acceptance criteria that are appropriate for your project.
+
+Title: Using incorrect patientOid with GET request to /patients endpoint causes application failure
+
+Description:
+When using an incorrect patientOid with the GET request to the /patients endpoint, the application fails to update the patient and crashes. This issue occurs consistently and makes it impossible to use the application until it is restarted. This defect should be prioritized as critical since it can cause the entire application to become unusable.
+
+Steps to Reproduce:
+
+Send a GET request to the /patients endpoint with an incorrect patientOid
+Observe the application crashing
+Expected Result:
+The application should return an error message indicating that the patientOid is incorrect and the patient should not be updated.
+
+Actual Result:
+The application crashes and becomes unusable until restarted.
+
+Attachments:
+
+Screenshot of the error message or crash log (if available)
+Priority: Critical
