@@ -48,3 +48,5 @@ Attachments:
 
 Screenshot of the error message or crash log (if available)
 Priority: Critical
+
+It's better to create a new branch for additional changes to an open MR in GitLab, to avoid conflicts and make it easier to manage the review and merge process. Once you've made the changes in the new branch, create a new MR to propose the changes for review and merge. You can link the new MR to the original MR if desired, so that the changes can be reviewed together.
