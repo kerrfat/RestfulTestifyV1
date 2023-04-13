@@ -76,3 +76,20 @@ The second test case tests that the startRobot function rejects with an error ob
 The third test case tests that the startRobot function rejects with an error object when there is output on stderr. We use Jest's mockImplementationOnce function to mock the behavior of the exec function to pass in stderr output. We then call the startRobot function and use Jest's expect function to test that the rejected error message matches the stderr output.
 
 You can then run this test file using Jest to ensure that the startRobot function works as expected in different scenarios.
+
+function startRobot(): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    const robotProcess = spawn('./startRobot');
+
+    robotProcess.stdout.on('data', (data) => {
+      const message = data.toString().trim();
+      if (message === 'Success the robe is stated') {
+        resolve();
+      }
+    });
+
+    robotProcess.stderr.on('data', (data) => {
+      reject(new Error(`Robot process failed with error: ${data.toString()}`));
+    });
+  });
+}
