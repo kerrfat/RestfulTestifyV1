@@ -1,11 +1,78 @@
-import { DicomMessage } from 'dcmjs';
+To create a TypeScript function with a promise to run a robot, you can use the child_process module to execute the shell script, and then wrap it in a promise. Here's an example implementation:
 
-// Load the DICOM file
-const buffer = fs.readFileSync('/path/to/dicom/file');
-const dicomData = new Uint8Array(buffer);
+typescript
+Copy code
+import { exec } from 'child_process';
 
-// Parse the DICOM data
-const dataset = DicomMessage.readFile(dicomData);
+function startRobot(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    exec('./startRobot', (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+      } else if (stderr) {
+        reject(new Error(stderr));
+      } else {
+        resolve('Success the robot is started');
+      }
+    });
+  });
+}
+In this function, we use the exec function from the child_process module to run the ./startRobot shell script. If there is an error, we reject the promise with the error object. If there is no error, but there is some output on stderr, we reject the promise with a new Error object containing the stderr output. If there are no errors and no stderr output, we resolve the promise with the success message.
 
-// Get the Series Instance UID
-const seriesInstanceUID = dataset.string('x0020000e');
+You can then call this function and handle the promise like this:
+
+typescript
+Copy code
+startRobot()
+  .then((message) => console.log(message))
+  .catch((error) => console.error(error));
+This code will run the startRobot function and log the success message to the console if the promise is resolved successfully. If there is an error, it will log the error object to the console.
+
+
+
+
+kfateh2007@gmail.com
+how to test it with jest
+To test the startRobot function with Jest, you can create a test file and use the expect function to test the output of the promise. Here's an example implementation:
+
+typescript
+Copy code
+import { exec } from 'child_process';
+import { startRobot } from './startRobot';
+
+jest.mock('child_process');
+
+describe('startRobot', () => {
+  it('resolves with success message on successful start', async () => {
+    (exec as jest.Mock).mockImplementationOnce((_, callback) => {
+      callback(null, 'Robot started', '');
+    });
+    const message = await startRobot();
+    expect(message).toEqual('Success the robot is started');
+  });
+
+  it('rejects with error object on start error', async () => {
+    const error = new Error('Failed to start robot');
+    (exec as jest.Mock).mockImplementationOnce((_, callback) => {
+      callback(error, '', '');
+    });
+    await expect(startRobot()).rejects.toEqual(error);
+  });
+
+  it('rejects with error object on stderr output', async () => {
+    const stderr = 'Error: Robot not found';
+    (exec as jest.Mock).mockImplementationOnce((_, callback) => {
+      callback(null, '', stderr);
+    });
+    await expect(startRobot()).rejects.toThrow(stderr);
+  });
+});
+In this test file, we first mock the child_process module using Jest's jest.mock function. We then create three test cases using Jest's describe and it functions.
+
+The first test case tests that the startRobot function resolves with the success message when the shell script runs successfully. We use Jest's mockImplementationOnce function to mock the behavior of the exec function to pass in the success message. We then call the startRobot function and use Jest's expect function to test that the resolved message matches the success message.
+
+The second test case tests that the startRobot function rejects with an error object when the shell script fails to run. We use Jest's mockImplementationOnce function to mock the behavior of the exec function to pass in an error object. We then call the startRobot function and use Jest's expect function to test that the rejected error object matches the expected error object.
+
+The third test case tests that the startRobot function rejects with an error object when there is output on stderr. We use Jest's mockImplementationOnce function to mock the behavior of the exec function to pass in stderr output. We then call the startRobot function and use Jest's expect function to test that the rejected error message matches the stderr output.
+
+You can then run this test file using Jest to ensure that the startRobot function works as expected in different scenarios.
