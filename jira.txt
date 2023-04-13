@@ -50,3 +50,13 @@ Screenshot of the error message or crash log (if available)
 Priority: Critical
 
 It's better to create a new branch for additional changes to an open MR in GitLab, to avoid conflicts and make it easier to manage the review and merge process. Once you've made the changes in the new branch, create a new MR to propose the changes for review and merge. You can link the new MR to the original MR if desired, so that the changes can be reviewed together.
+
+"Thank you for being an incredible leader and mentor. You have inspired me to be the best version of myself and I am grateful for everything you've done for me."
+
+"You have made such a positive impact on this team, and we are going to miss you so much. Wishing you all the best in your next adventure!"
+
+"It's hard to say goodbye to someone who has been such a supportive and encouraging presence on this team. We'll miss your leadership and guidance, but we know you'll do great things wherever you go!"
+
+"Your positivity and kindness have brightened up our workdays, and we are so grateful to have had the opportunity to work with you. Best of luck in your future endeavors!"
+
+"You have been an amazing team lead and we are going to miss your expertise and guidance. Thank you for everything you've done for us, and we hope you stay in touch!"
