@@ -1,18 +1,11 @@
+import { DicomMessage } from 'dcmjs';
 
-import { readFileSync } from 'fs';
-import { Message } from 'dcmjs';
-import { readDICOMFile } from 'dcmjs/lib/dcmread';
+// Load the DICOM file
+const buffer = fs.readFileSync('/path/to/dicom/file');
+const dicomData = new Uint8Array(buffer);
 
-// Read the DICOM file as a buffer
-const buffer = readFileSync('/path/to/dicom/file.dcm');
+// Parse the DICOM data
+const dataset = DicomMessage.readFile(dicomData);
 
-// Parse the DICOM file into a Message object
-const message = readDICOMFile(buffer);
-
-// Extract the metadata from the Message object
-const metadata = message.dict;
-
-// Extract the SeriesInstanceUID attribute
-const seriesInstanceUID = metadata.SeriesInstanceUID.Value[0];
-
-console.log(`SeriesInstanceUID: ${seriesInstanceUID}`);
+// Get the Series Instance UID
+const seriesInstanceUID = dataset.string('x0020000e');
