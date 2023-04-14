@@ -1,1 +1,71 @@
 
+Yes, you can modify the startRobot function to SSH into the remote machine before starting the robot sim using the ssh2 module. Here's an example implementation:
+
+typescript
+Copy code
+import { Client } from 'ssh2';
+import { spawn } from 'child_process';
+
+interface SshCredentials {
+  host: string;
+  username: string;
+  password: string;
+}
+
+function sshIntoMachine(credentials: SshCredentials): Promise<Client> {
+  return new Promise<Client>((resolve, reject) => {
+    const sshClient = new Client();
+    sshClient.on('ready', () => {
+      console.log('SSH connection established');
+      resolve(sshClient);
+    });
+    sshClient.on('error', (err) => {
+      console.error('Error establishing SSH connection:', err);
+      reject(err);
+    });
+    sshClient.connect(credentials);
+  });
+}
+
+function startRobot(sshClient: Client): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    sshClient.exec('./startRobot', (err, stream) => {
+      if (err) {
+        console.error('Error starting robot sim:', err);
+        reject(err);
+        return;
+      }
+      stream.on('data', (data) => {
+        const message = data.toString();
+        console.log(message);
+        if (message.includes('Success the robe is stated')) {
+          resolve();
+        }
+      });
+      stream.stderr.on('data', (data) => {
+        console.error(data.toString());
+      });
+    });
+  });
+}
+In this implementation, the sshIntoMachine function establishes an SSH connection to the remote machine using the Client class from the ssh2 module. The function returns a Promise that resolves with the SSH client object when the connection is established.
+
+The startRobot function takes an SSH client object as a parameter and uses it to execute the ./startRobot script on the remote machine. The function sets up event listeners on the stdout and stderr streams of the SSH channel. When the "Success the robe is stated" message is logged to the stdout stream, the Promise is resolved, indicating that the robot sim has started successfully.
+
+You can call these functions from your test code like this:
+
+typescript
+Copy code
+async function testRobotConnection() {
+  const sshCredentials: SshCredentials = {
+    host: 'example.com',
+    username: 'username',
+    password: 'password'
+  };
+  const sshClient = await sshIntoMachine(sshCredentials);
+  await startRobot(sshClient);
+  // Make a request to the endpoint that checks if the robot is connected
+  // and verify that the response body contains {connected:true}.
+  sshClient.end(); // Close the SSH connection when done
+}
+In this example, the testRobotConnection function first establishes an SSH connection to the remote machine using the sshIntoMachine function. It then starts the robot sim on the remote machine using the startRobot function, which uses the SSH client object to execute the ./startRobot script. Finally, the function makes requests to the endpoint that checks if the robot is connected, and closes the SSH connection when done.
