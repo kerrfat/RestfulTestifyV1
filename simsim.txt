@@ -1,37 +1,56 @@
 import { Client } from 'ssh2';
 
-function startRobotSimulator() {
-  const conn = new Client();
-  conn.on('ready', () => {
-    conn.exec('./startRobtSimulator', (err, stream) => {
-      if (err) throw err;
+function execCommand(conn: Client, command: string): Promise<number> {
+  return new Promise((resolve, reject) => {
+    conn.exec(command, (err, stream) => {
+      if (err) return reject(err);
       stream.on('close', (code, signal) => {
-        console.log(`Robot Simulator started with code ${code}`);
-        conn.end();
+        resolve(code);
       });
     });
-  }).connect({
-    host: 'your_server_host',
-    port: 22,
-    username: 'your_ssh_username',
-    password: 'your_ssh_password'
   });
 }
 
-function stopRobotSimulator() {
+async function startRobotSimulator(): Promise<void> {
   const conn = new Client();
-  conn.on('ready', () => {
-    conn.exec('./stopRobtSimulator', (err, stream) => {
-      if (err) throw err;
-      stream.on('close', (code, signal) => {
-        console.log(`Robot Simulator stopped with code ${code}`);
-        conn.end();
-      });
+  await new Promise((resolve, reject) => {
+    conn.on('ready', () => {
+      execCommand(conn, './startRobtSimulator')
+        .then((code) => {
+          console.log(`Robot Simulator started with code ${code}`);
+          conn.end();
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }).connect({
+      host: 'your_server_host',
+      port: 22,
+      username: 'your_ssh_username',
+      password: 'your_ssh_password'
     });
-  }).connect({
-    host: 'your_server_host',
-    port: 22,
-    username: 'your_ssh_username',
-    password: 'your_ssh_password'
+  });
+}
+
+async function stopRobotSimulator(): Promise<void> {
+  const conn = new Client();
+  await new Promise((resolve, reject) => {
+    conn.on('ready', () => {
+      execCommand(conn, './stopRobtSimulator')
+        .then((code) => {
+          console.log(`Robot Simulator stopped with code ${code}`);
+          conn.end();
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }).connect({
+      host: 'your_server_host',
+      port: 22,
+      username: 'your_ssh_username',
+      password: 'your_ssh_password'
+    });
   });
 }
