@@ -1,78 +1,24 @@
-import { Client } from 'ssh2';
+const { exec } = require('child_process');
 
-function execCommand(conn: Client, command: string): Promise<number> {
+const startRobotSimulator = () => {
   return new Promise((resolve, reject) => {
-    conn.exec(command, (err, stream) => {
-      if (err) return reject(err);
-      stream.on('close', (code, signal) => {
-        resolve(code);
-      });
+    exec('bash /path/to/start-robot-simulator.sh', (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(stdout);
+      }
     });
   });
-}
-
-async function startRobotSimulator(): Promise<void> {
-  const conn = new Client();
-  await new Promise((resolve, reject) => {
-    conn.on('ready', () => {
-      execCommand(conn, './startRobtSimulator')
-        .then((code) => {
-          console.log(`Robot Simulator started with code ${code}`);
-          conn.end();
-          resolve();
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    }).connect({
-      host: 'your_server_host',
-      port: 22,
-      username: 'your_ssh_username',
-      password: 'your_ssh_password'
-    });
-  });
-}
-
-async function stopRobotSimulator(): Promise<void> {
-  const conn = new Client();
-  await new Promise((resolve, reject) => {
-    conn.on('ready', () => {
-      execCommand(conn, './stopRobtSimulator')
-        .then((code) => {
-          console.log(`Robot Simulator stopped with code ${code}`);
-          conn.end();
-          resolve();
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    }).connect({
-      host: 'your_server_host',
-      port: 22,
-      username: 'your_ssh_username',
-      password: 'your_ssh_password'
-    });
-  });
-}
-
-const stopRobotSimulator = async () => {
-  const ssh = new SSH({
-    host: 'robot-simulator-host',
-    username: 'robot-simulator-username',
-    password: 'robot-simulator-password',
-  });
-
-  try {
-    await ssh.connect();
-    await ssh.execCommand('./stopRobtSimulator');
-
-    // Wait for any open connections to close
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    await ssh.dispose();
-    console.log('Robot Simulator stopped');
-  } catch (error) {
-    console.error(error);
-  }
 };
 
+#!/bin/bash
+
+# Install sshpass if it's not already installed
+if ! command -v sshpass &> /dev/null
+then
+    sudo apt-get update && sudo apt-get install -y sshpass
+fi
+
+# Connect to the remote server and start the Robot Simulator
+sshpass -p 'your-password-here' ssh user@server 'cd /path/to/robot/simulator && ./startRobotSimulator &'
