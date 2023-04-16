@@ -1,0 +1,37 @@
+import { Client } from 'ssh2';
+
+function startRobotSimulator() {
+  const conn = new Client();
+  conn.on('ready', () => {
+    conn.exec('./startRobtSimulator', (err, stream) => {
+      if (err) throw err;
+      stream.on('close', (code, signal) => {
+        console.log(`Robot Simulator started with code ${code}`);
+        conn.end();
+      });
+    });
+  }).connect({
+    host: 'your_server_host',
+    port: 22,
+    username: 'your_ssh_username',
+    password: 'your_ssh_password'
+  });
+}
+
+function stopRobotSimulator() {
+  const conn = new Client();
+  conn.on('ready', () => {
+    conn.exec('./stopRobtSimulator', (err, stream) => {
+      if (err) throw err;
+      stream.on('close', (code, signal) => {
+        console.log(`Robot Simulator stopped with code ${code}`);
+        conn.end();
+      });
+    });
+  }).connect({
+    host: 'your_server_host',
+    port: 22,
+    username: 'your_ssh_username',
+    password: 'your_ssh_password'
+  });
+}
