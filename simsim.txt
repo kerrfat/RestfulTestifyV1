@@ -54,3 +54,25 @@ async function stopRobotSimulator(): Promise<void> {
     });
   });
 }
+
+const stopRobotSimulator = async () => {
+  const ssh = new SSH({
+    host: 'robot-simulator-host',
+    username: 'robot-simulator-username',
+    password: 'robot-simulator-password',
+  });
+
+  try {
+    await ssh.connect();
+    await ssh.execCommand('./stopRobtSimulator');
+
+    // Wait for any open connections to close
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    await ssh.dispose();
+    console.log('Robot Simulator stopped');
+  } catch (error) {
+    console.error(error);
+  }
+};
+
