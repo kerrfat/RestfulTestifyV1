@@ -86,3 +86,70 @@ describe('Robot Simulator Tests', () => {
     // Call your endpoint test function here, and it will only execute after the Simulator has started.
   });
 });
+
+import { AsyncResource } from 'async_hooks';
+import { Client } from 'ssh2';
+import { startSimulator } from './startSimulator';
+import { stopSimulator } from './stopSimulator';
+
+const asyncResources = new Map();
+
+const asyncHook = async_hooks.createHook({
+  init(asyncId, type, triggerAsyncId) {
+    const asyncResource = new AsyncResource(type);
+    asyncResources.set(asyncId, asyncResource);
+    asyncResource.emitBefore();
+  },
+  destroy(asyncId) {
+    const asyncResource = asyncResources.get(asyncId);
+    if (asyncResource) {
+      asyncResource.emitAfter();
+      asyncResources.delete(asyncId);
+    }
+  },
+});
+
+beforeAll(() => {
+  asyncHook.enable();
+});
+
+afterAll(() => {
+  asyncHook.disable();
+});
+
+test('should connect to robot simulator', async () => {
+  const ssh = new Client();
+  const connectionPromise = new Promise((resolve, reject) => {
+    ssh.on('ready', () => {
+      console.log('SSH connection established.');
+      resolve();
+    });
+    ssh.on('error', (err) => {
+      console.error(err);
+      reject(err);
+    });
+    ssh.connect({
+      host: 'robot-simulator.example.com',
+      port: 22,
+      username: 'testuser',
+      password: 'testpass',
+    });
+  });
+
+  await connectionPromise;
+
+  try {
+    await startSimulator(ssh);
+    const isConnected = await checkConnection();
+    expect(isConnected).toBe(true);
+  } finally {
+    await stopSimulator(ssh);
+    ssh.end();
+  }
+});
+
+async function checkConnection(): Promise<boolean> {
+  // Send a request to the /robot/connected endpoint and return a boolean
+  // indicating whether the response indicates that the robot simulator is connected.
+}
+
