@@ -153,3 +153,10 @@ async function checkConnection(): Promise<boolean> {
   // indicating whether the response indicates that the robot simulator is connected.
 }
 
+export async function startSimulator(ssh: NodeSSH) {
+  const result = await ssh.execCommand('./startRobtSimulator', { cwd: '/path/to/simulator' });
+  if (result.stdout.trim() !== 'Success the robot has been started') {
+    throw new Error(`Failed to start simulator: ${result.stderr}`);
+  }
+}
+
