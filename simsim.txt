@@ -1,24 +1,88 @@
-const { exec } = require('child_process');
+import { Client } from 'ssh2';
+import { spawn } from 'child_process';
 
-const startRobotSimulator = () => {
+const sshConfig = {
+  host: 'remote-machine.example.com',
+  username: 'your-ssh-username',
+  privateKey: require('fs').readFileSync('/path/to/your/private/key'),
+};
+
+const startSimulator = (ssh: Client) => {
   return new Promise((resolve, reject) => {
-    exec('bash /path/to/start-robot-simulator.sh', (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(stdout);
+    const command = './startRobotSimulator';
+    ssh.exec(command, (err, stream) => {
+      if (err) {
+        reject(err);
+        return;
       }
+      stream.on('close', (code, signal) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(`Process exited with code ${code} and signal ${signal}`);
+        }
+      });
+      stream.on('data', (data) => {
+        if (data.includes('Success the robot has been started')) {
+          resolve();
+        }
+      });
+      stream.stderr.on('data', (data) => {
+        reject(data);
+      });
     });
   });
 };
 
-#!/bin/bash
+const stopSimulator = (ssh: Client) => {
+  return new Promise((resolve, reject) => {
+    const command = './stopRobotSimulator';
+    ssh.exec(command, (err, stream) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      stream.on('close', (code, signal) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(`Process exited with code ${code} and signal ${signal}`);
+        }
+      });
+      stream.on('data', (data) => {
+        if (data.includes('Success the robot has been stopped')) {
+          resolve();
+        }
+      });
+      stream.stderr.on('data', (data) => {
+        reject(data);
+      });
+    });
+  });
+};
 
-# Install sshpass if it's not already installed
-if ! command -v sshpass &> /dev/null
-then
-    sudo apt-get update && sudo apt-get install -y sshpass
-fi
+describe('Robot Simulator Tests', () => {
+  let ssh: Client;
 
-# Connect to the remote server and start the Robot Simulator
-sshpass -p 'your-password-here' ssh user@server 'cd /path/to/robot/simulator && ./startRobotSimulator &'
+  beforeAll((done) => {
+    ssh = new Client();
+    ssh.on('ready', () => {
+      startSimulator(ssh).then(() => done()).catch(done.fail);
+    });
+    ssh.on('error', (err) => {
+      done.fail(err);
+    });
+    ssh.connect(sshConfig);
+  });
+
+  afterAll((done) => {
+    stopSimulator(ssh)
+      .then(() => ssh.end())
+      .then(() => done())
+      .catch(done.fail);
+  });
+
+  it('should test the /robot/connected endpoint', async () => {
+    // Call your endpoint test function here, and it will only execute after the Simulator has started.
+  });
+});
