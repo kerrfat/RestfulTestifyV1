@@ -159,4 +159,4 @@ export async function startSimulator(ssh: NodeSSH) {
     throw new Error(`Failed to start simulator: ${result.stderr}`);
   }
 }
-Thank you so much for your kind wishes for Eid. Your thoughtfulness means a lot to me.
+Hi team, just wanted to let you all know that I created a docker image for Swagger Editor at 10.54.86.75:81. If you want to use it, all you need to do is copy and paste the openapi.json file from the Service docs. For anyone who doesn't have the Swagger docs ready, this should make things a lot easier. Let me know if you have any questions or issues with using it. 
