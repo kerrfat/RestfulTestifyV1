@@ -159,4 +159,4 @@ export async function startSimulator(ssh: NodeSSH) {
     throw new Error(`Failed to start simulator: ${result.stderr}`);
   }
 }
-
+Thank you so much for your kind wishes for Eid. Your thoughtfulness means a lot to me.
