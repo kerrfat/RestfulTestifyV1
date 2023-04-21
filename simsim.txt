@@ -160,3 +160,5 @@ export async function startSimulator(ssh: NodeSSH) {
   }
 }
 Hi team, just wanted to let you all know that I created a docker image for Swagger Editor at 10.54.86.75:81. If you want to use it, all you need to do is copy and paste the openapi.json file from the Service docs. For anyone who doesn't have the Swagger docs ready, this should make things a lot easier. Let me know if you have any questions or issues with using it. 
+
+Hi everyone, I wanted to let you all know that I will be taking the rest of the day off to celebrate Eid with my kids. I will make up the time later today
