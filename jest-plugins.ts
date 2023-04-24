@@ -67,3 +67,37 @@ rl.question('Enter a description for the new module: ', (description) => {
     console.log(`Module created successfully: ${moduleName}`);
   });
 });
+
+import fs from 'fs';
+import path from 'path';
+
+const createModule = async (moduleName: string) => {
+  try {
+    const modulePath = path.join(__dirname, '../modules', moduleName);
+
+    if (fs.existsSync(modulePath)) {
+      console.error(`Module "${moduleName}" already exists`);
+      return;
+    }
+
+    fs.mkdirSync(modulePath);
+    fs.mkdirSync(path.join(modulePath, '__tests__'));
+    fs.mkdirSync(path.join(modulePath, 'data'));
+    fs.mkdirSync(path.join(modulePath, 'docs'));
+    fs.mkdirSync(path.join(modulePath, 'reports'));
+    fs.writeFileSync(path.join(modulePath, 'actions.ts'), '');
+    fs.writeFileSync(path.join(modulePath, 'objects.ts'), '');
+    fs.writeFileSync(path.join(modulePath, 'service-config.ts'), `{
+  "name": "${moduleName}",
+  "description": "${await prompt('Enter module description')}",
+  "ignoredTests": [],
+  "createDate": "${new Date().toISOString()}",
+  "author": "${await prompt('Enter author name')}",
+  "testsDir": "__tests__"
+}`);
+    console.log(`Module "${moduleName}" created successfully`);
+  } catch (err) {
+    console.error(`Error creating module "${moduleName}":`, err);
+  }
+};
+
