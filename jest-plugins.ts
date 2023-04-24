@@ -78,3 +78,15 @@ module.exports = class extends Generator {
     this.log(chalk.green('New module created successfully!'));
   }
 };
+
+export const serviceName = {
+  name: "User Management Service",
+  description: "API for managing user accounts and authentication",
+  author: "John Doe",
+  createDate: "2022-04-22",
+  testsDir: "__tests__",
+  ignoredTests: [
+    "createUser.test.ts",
+    "deleteUser.test.ts",
+  ],
+};
