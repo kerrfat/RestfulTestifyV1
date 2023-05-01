@@ -90,3 +90,61 @@ export const serviceName = {
     "deleteUser.test.ts",
   ],
 };
+
+
+const fs = require('fs');
+const dicomParser = require('dicom-parser');
+
+class DicomMetadata {
+  constructor(filePath) {
+    const dicomData = fs.readFileSync(filePath);
+    const dataSet = dicomParser.parseDicom(dicomData);
+
+    this.studyId = dataSet.string('x00200010');
+    this.seriesId = dataSet.string('x0020000e');
+    this.patientName = dataSet.string('x00100010');
+    this.patientId = dataSet.string('x00100020');
+    this.modality = dataSet.string('x00080060');
+    this.sopInstanceUid = dataSet.string('x00080018');
+    this.frameNumber = dataSet.intString('x00200013');
+  }
+
+  getStudyId() {
+    return this.studyId;
+  }
+
+  getSeriesId() {
+    return this.seriesId;
+  }
+
+  getPatientName() {
+    return this.patientName;
+  }
+
+  getPatientId() {
+    return this.patientId;
+  }
+
+  getModality() {
+    return this.modality;
+  }
+
+  getSopInstanceUid() {
+    return this.sopInstanceUid;
+  }
+
+  getFrameNumber() {
+    return this.frameNumber;
+  }
+}
+
+// Example usage:
+const dicomMetadata = new DicomMetadata('path/to/dicom/file.dcm');
+console.log('Study ID:', dicomMetadata.getStudyId());
+console.log('Series ID:', dicomMetadata.getSeriesId());
+console.log('Patient Name:', dicomMetadata.getPatientName());
+console.log('Patient ID:', dicomMetadata.getPatientId());
+console.log('Modality:', dicomMetadata.getModality());
+console.log('SOP Instance UID:', dicomMetadata.getSopInstanceUid());
+console.log('Frame Number:', dicomMetadata.getFrameNumber());
+
