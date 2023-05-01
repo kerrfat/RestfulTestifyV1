@@ -148,3 +148,24 @@ console.log('Modality:', dicomMetadata.getModality());
 console.log('SOP Instance UID:', dicomMetadata.getSopInstanceUid());
 console.log('Frame Number:', dicomMetadata.getFrameNumber());
 
+const fs = require('fs');
+const dicomParser = require('dicom-parser');
+
+function getAllDicomTags(filePath) {
+  const dicomData = fs.readFileSync(filePath);
+  const dataSet = dicomParser.parseDicom(dicomData);
+
+  const tags = dataSet.elements;
+  const dicomTags = {};
+
+  for (let tag of tags) {
+    const tagValue = dataSet.string(tag.tag);
+    dicomTags[tag.tag] = tagValue;
+  }
+
+  return dicomTags;
+}
+
+// Example usage:
+const dicomTags = getAllDicomTags('path/to/dicom/file.dcm');
+console.log(dicomTags);
